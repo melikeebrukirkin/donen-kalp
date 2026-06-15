@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($chrome = \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\"; $out = \"$env:TEMP\\\\kalp_test.png\"; $prof = \"$env:TEMP\\\\chrshot_$\\(Get-Random\\)\"; Remove-Item $out -ErrorAction SilentlyContinue; $a = @\\(\"--headless=new\",\"--disable-gpu\",\"--no-sandbox\",\"--no-first-run\",\"--user-data-dir=$prof\",\"--hide-scrollbars\",\"--window-size=600,900\",\"--virtual-time-budget=4000\",\"--screenshot=$out\",\"https://melikeebrukirkin.github.io/donen-kalp/\"\\); $p = Start-Process -FilePath $chrome -ArgumentList $a -NoNewWindow -Wait -PassThru; \"exit: $\\($p.ExitCode\\)\"; if\\(Test-Path $out\\){ \"OK $\\(\\(Get-Item $out\\).Length\\) bytes -> $out\" } else { \"no screenshot\" })"
+    ]
+  }
+}

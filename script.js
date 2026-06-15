@@ -79,7 +79,9 @@ function buildHeart(){
 function applyConfig(){
   document.documentElement.style.setProperty('--love', config.color);
   document.documentElement.style.setProperty('--glow', lighten(config.color, 30));
-  $('#introTo').textContent = config.to ? config.to + ' için' : '';
+  const tag = $('#nameTag');
+  tag.textContent = config.to ? config.to + ' için 💗' : '';
+  tag.classList.toggle('show', !!config.to);
   document.title = config.to ? (config.to + ' 💗') : '💗';
   buildHeart();
 }
@@ -213,13 +215,4 @@ function startFalling(){
   if (fallTimer) return;
   fallTimer = setInterval(spawnHeart, 450);
 }
-
-/* ---------- 9) Açılış ekranı ---------- */
-$('#startBtn').onclick = () => {
-  $('#intro').classList.add('hide');
-  startFalling();
-  // ilk dokunuş = sesi başlatma izni
-  audioOn = true;
-  $('#muteBtn').textContent = '🔈';
-  startMusic();
-};
+startFalling();   // kalpçikler açılışta başlasın
