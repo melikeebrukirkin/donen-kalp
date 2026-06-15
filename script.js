@@ -11,7 +11,6 @@ const params = new URLSearchParams(location.search);
 const config = {
   to:    params.get('to')    || '',
   word:  params.get('word')  || 'love you',
-  msg:   params.get('msg')   || 'Seni Seviyorum 💗',
   color: '#' + (params.get('color') || 'ea80b0').replace('#', ''),
 };
 
@@ -80,9 +79,8 @@ function buildHeart(){
 function applyConfig(){
   document.documentElement.style.setProperty('--love', config.color);
   document.documentElement.style.setProperty('--glow', lighten(config.color, 30));
-  $('#caption').textContent = config.msg;
   $('#introTo').textContent = config.to ? config.to + ' için' : '';
-  document.title = config.to ? (config.to + ' 💗') : config.msg;
+  document.title = config.to ? (config.to + ' 💗') : '💗';
   buildHeart();
 }
 
@@ -118,7 +116,6 @@ const COLORS = ['ea80b0','ff4d6d','ff9eb5','b388ff','7afcff','ffd166'];
 // panel alanlarını mevcut değerlerle doldur
 $('#inTo').value   = config.to;
 $('#inWord').value = config.word;
-$('#inMsg').value  = config.msg;
 
 $('#openPanel').onclick  = () => $('#panel').classList.add('open');
 $('#closePanel').onclick = () => $('#panel').classList.remove('open');
@@ -127,7 +124,6 @@ $('#panel').onclick = (e) => { if (e.target.id === 'panel') $('#panel').classLis
 function readPanel(){
   config.to    = $('#inTo').value.trim();
   config.word  = $('#inWord').value.trim() || 'love you';
-  config.msg   = $('#inMsg').value.trim()  || '💗';
   const active = document.querySelector('.swatch.active');
   config.color = '#' + (active ? active.dataset.color : 'ea80b0');
 }
@@ -143,7 +139,6 @@ function buildLink(){
   const u = new URL(location.href.split('?')[0]);
   if (config.to) u.searchParams.set('to', config.to);
   u.searchParams.set('word',  config.word);
-  u.searchParams.set('msg',   config.msg);
   u.searchParams.set('color', config.color.replace('#',''));
   return u.toString();
 }
@@ -155,7 +150,7 @@ $('#shareBtn').onclick = async () => {
   const hint = $('#hint');
   try {
     if (navigator.share){
-      await navigator.share({ title: config.msg, url: link });
+      await navigator.share({ title: config.to ? (config.to + ' 💗') : '💗', url: link });
       return;
     }
     await navigator.clipboard.writeText(link);
