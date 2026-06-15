@@ -10,7 +10,6 @@ const $ = (s) => document.querySelector(s);
 const params = new URLSearchParams(location.search);
 const config = {
   to:    params.get('to')    || '',
-  word:  params.get('word')  || 'love you',
   color: '#' + (params.get('color') || 'ea80b0').replace('#', ''),
 };
 
@@ -46,34 +45,31 @@ function buildHeart(){
   const heart = $('#heart');
   heart.innerHTML = '';
 
-  const SCALE_X   = 11.5; // yatay büyüklük (daha geniş = daha tombul)
-  const SCALE_Y   = 9;    // dikey büyüklük (biraz daha küçük kalp)
-  const WORDS     = 84;   // her katmandaki kelime sayısı (daha sık = daha net)
-  const LAYERS    = 9;    // derinlik katmanı (kalbe hacim verir)
-  const LAYER_GAP = 11;   // katmanlar arası z mesafesi (px)
+  const SCALE_X = 11;     // yatay büyüklük
+  const SCALE_Y = 9;      // dikey büyüklük
+  const DOTS    = 170;    // çizgi yumuşaklığı (nokta sayısı)
 
-  for (let l = 0; l < LAYERS; l++){
-    const z = (l - (LAYERS - 1) / 2) * LAYER_GAP;
+  // 3 iç içe kalp çizgisi (ölçek, derinlik)
+  const RINGS = [
+    { sc: 1.00, z:  10 },
+    { sc: 0.80, z:   0 },
+    { sc: 0.60, z: -10 },
+  ];
 
-    for (let i = 0; i < WORDS; i++){
-      const t  = (i / WORDS) * Math.PI * 2;
+  RINGS.forEach(ring => {
+    for (let i = 0; i < DOTS; i++){
+      const t  = (i / DOTS) * Math.PI * 2;
       const p  = heartPoint(t);
+      const px = p.x * SCALE_X * ring.sc;
+      const py = -p.y * SCALE_Y * ring.sc;   // ekran y'si ters
 
-      const px = p.x * SCALE_X;
-      const py = -p.y * SCALE_Y;           // ekran y'si ters
-
-      const w = document.createElement('span');
-      w.className = 'word';
-      w.textContent = config.word;
-      // YATAY yazı: artık eğriye göre döndürmüyoruz
-      w.style.transform =
-        `translate(-50%,-50%) translate3d(${px}px, ${py}px, ${z}px)`;
-      // dıştaki katmanlar daha soluk → derinlik hissi
-      w.style.opacity = (0.45 + 0.55 * (1 - Math.abs(z) / (LAYER_GAP * LAYERS / 2))).toFixed(2);
-      w.style.animationDelay = (i * 60 + l * 120) + 'ms';
-      heart.appendChild(w);
+      const d = document.createElement('span');
+      d.className = 'dot';
+      d.style.transform =
+        `translate(-50%,-50%) translate3d(${px}px, ${py}px, ${ring.z}px)`;
+      heart.appendChild(d);
     }
-  }
+  });
 }
 
 /* ---------- 4) Renk + mesajı uygula ---------- */
@@ -118,7 +114,6 @@ const COLORS = ['ea80b0','ff4d6d','ff9eb5','b388ff','7afcff','ffd166'];
 
 // panel alanlarını mevcut değerlerle doldur
 $('#inTo').value   = config.to;
-$('#inWord').value = config.word;
 
 $('#openPanel').onclick  = () => $('#panel').classList.add('open');
 $('#closePanel').onclick = () => $('#panel').classList.remove('open');
@@ -126,7 +121,6 @@ $('#panel').onclick = (e) => { if (e.target.id === 'panel') $('#panel').classLis
 
 function readPanel(){
   config.to    = $('#inTo').value.trim();
-  config.word  = $('#inWord').value.trim() || 'love you';
   const active = document.querySelector('.swatch.active');
   config.color = '#' + (active ? active.dataset.color : 'ea80b0');
 }
@@ -141,7 +135,6 @@ $('#applyBtn').onclick = () => {
 function buildLink(){
   const u = new URL(location.href.split('?')[0]);
   if (config.to) u.searchParams.set('to', config.to);
-  u.searchParams.set('word',  config.word);
   u.searchParams.set('color', config.color.replace('#',''));
   return u.toString();
 }
@@ -163,75 +156,52 @@ $('#shareBtn').onclick = async () => {
   }
 };
 
-/* ---------- 7) Müzik (keman tonlu, duygusal melodi) ---------- */
-let audioOn = false, audioCtx = null, loopTimer = null, master = null, reverb = null;
+/* ---------- 7) Müzik (Super Mario - 8-bit) ---------- */
+let audioOn = false, audioCtx = null, loopTimer = null, master = null;
 
-// duygusal, yavaş melodi  (nota Hz, süre = vuruş)
-const MELODY = [
-  ['A4',1],['C5',1],['E5',2],['D5',1],['C5',1],['B4',2],
-  ['A4',1],['G4',1],['A4',2],['E4',2],['G4',2],
-  ['F4',1],['A4',1],['C5',2],['B4',1],['A4',1],['G4',2],
-  ['E4',1],['F4',1],['A4',2],['G4',1],['E4',1],['A4',3],['A4',1]
+const HZ = {
+  'E4':329.63,'G4':392.0,'A4':440.0,'As4':466.16,'B4':493.88,
+  'C5':523.25,'D5':587.33,'Ds5':622.25,'E5':659.25,'F5':698.46,
+  'Fs5':739.99,'G5':783.99,'Gs5':830.61,'A5':880.0,'B5':987.77,'C6':1046.50,
+  'R':0
+};
+
+// Super Mario Bros - ana tema (sekizlik nota ızgarası, R = es)
+const MARIO = [
+  // giriş motifi
+  ['E5',1],['E5',1],['R',1],['E5',1],['R',1],['C5',1],['E5',1],['R',1],
+  ['G5',1],['R',1],['R',1],['R',1],['G4',1],['R',1],['R',1],['R',1],
+  // ikinci bölüm
+  ['C5',1],['R',1],['R',1],['G4',1],['R',1],['R',1],['E4',1],['R',1],
+  ['R',1],['A4',1],['R',1],['B4',1],['R',1],['As4',1],['A4',1],['R',1],
+  ['G4',2],['E5',2],['G5',1],['A5',1],['R',1],['F5',1],['G5',1],['R',1],
+  ['E5',1],['R',1],['C5',1],['D5',1],['B4',2],['R',2]
 ];
-const HZ = { 'E4':329.63,'F4':349.23,'G4':392.0,'A4':440.0,'B4':493.88,
-            'C5':523.25,'D5':587.33,'E5':659.25,'F5':698.46,'G5':783.99 };
 
-// tek bir keman benzeri nota (testere dalgası + alçak geçiren süzgeç + vibrato)
-function playViolin(freq, t0, dur){
-  const filter = audioCtx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.value = 2600;
-  filter.Q.value = 0.6;
-
+// tek bir 8-bit nota (kare dalga = chiptune)
+function playBleep(freq, t0, dur){
+  if (!freq) return;                       // es
   const g = audioCtx.createGain();
-  filter.connect(g);
   g.connect(master);
-  if (reverb) g.connect(reverb);
-
-  // vibrato (yayın titreşimi)
-  const lfo = audioCtx.createOscillator();
-  const lfoGain = audioCtx.createGain();
-  lfo.frequency.value = 5.5;
-  lfoGain.gain.value = freq * 0.011;
-  lfo.connect(lfoGain);
-
-  // iki hafif detune testere = daha dolgun, kemansı ton
-  const o1 = audioCtx.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = freq;
-  const o2 = audioCtx.createOscillator(); o2.type = 'sawtooth'; o2.frequency.value = freq; o2.detune.value = 7;
-  lfoGain.connect(o1.frequency); lfoGain.connect(o2.frequency);
-  o1.connect(filter); o2.connect(filter);
-
-  // yumuşak yay envelope'u (yavaş giriş)
-  const A = 0.14, R = 0.30, peak = 0.13;
+  const o = audioCtx.createOscillator();
+  o.type = 'square';
+  o.frequency.value = freq;
+  o.connect(g);
+  const peak = 0.14;
   g.gain.setValueAtTime(0.0001, t0);
-  g.gain.linearRampToValueAtTime(peak, t0 + A);
-  g.gain.setValueAtTime(peak, t0 + Math.max(A, dur - R));
+  g.gain.linearRampToValueAtTime(peak, t0 + 0.01);
+  g.gain.setValueAtTime(peak, t0 + dur * 0.7);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-
-  [lfo, o1, o2].forEach(o => { o.start(t0); o.stop(t0 + dur + 0.05); });
-}
-
-function buildReverb(){
-  // basit yankı (oda hissi) için convolver
-  const len = audioCtx.sampleRate * 2.2;
-  const buf = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
-  for (let ch = 0; ch < 2; ch++){
-    const d = buf.getChannelData(ch);
-    for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.5);
-  }
-  const conv = audioCtx.createConvolver(); conv.buffer = buf;
-  const wet = audioCtx.createGain(); wet.gain.value = 0.35;
-  conv.connect(wet); wet.connect(audioCtx.destination);
-  return conv;
+  o.start(t0); o.stop(t0 + dur + 0.02);
 }
 
 function scheduleMelody(){
-  const beat = 0.62;                 // yavaş tempo
-  let t = audioCtx.currentTime + 0.15;
+  const beat = 0.15;                        // hızlı, neşeli tempo
+  let t = audioCtx.currentTime + 0.1;
   let total = 0;
-  MELODY.forEach(([n, b]) => {
+  MARIO.forEach(([n, b]) => {
     const d = b * beat;
-    playViolin(HZ[n], t, d * 0.92);
+    playBleep(HZ[n], t, d * 0.9);
     t += d; total += d;
   });
   loopTimer = setTimeout(() => { if (audioOn) scheduleMelody(); }, total * 1000);
@@ -240,8 +210,7 @@ function scheduleMelody(){
 function startMusic(){
   if (!audioCtx){
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    master = audioCtx.createGain(); master.gain.value = 0.9; master.connect(audioCtx.destination);
-    reverb = buildReverb();
+    master = audioCtx.createGain(); master.gain.value = 0.85; master.connect(audioCtx.destination);
   }
   if (audioCtx.state === 'suspended') audioCtx.resume();
   scheduleMelody();
