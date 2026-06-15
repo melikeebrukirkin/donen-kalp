@@ -9,6 +9,7 @@ const $ = (s) => document.querySelector(s);
 /* ---------- 1) Ayarları URL'den oku ---------- */
 const params = new URLSearchParams(location.search);
 const config = {
+  to:    params.get('to')    || '',
   word:  params.get('word')  || 'love you',
   msg:   params.get('msg')   || 'Seni Seviyorum 💗',
   color: '#' + (params.get('color') || 'ea80b0').replace('#', ''),
@@ -80,7 +81,8 @@ function applyConfig(){
   document.documentElement.style.setProperty('--love', config.color);
   document.documentElement.style.setProperty('--glow', lighten(config.color, 30));
   $('#caption').textContent = config.msg;
-  document.title = config.msg;
+  $('#introTo').textContent = config.to ? config.to + ' için' : '';
+  document.title = config.to ? (config.to + ' 💗') : config.msg;
   buildHeart();
 }
 
@@ -114,6 +116,7 @@ const COLORS = ['ea80b0','ff4d6d','ff9eb5','b388ff','7afcff','ffd166'];
 })();
 
 // panel alanlarını mevcut değerlerle doldur
+$('#inTo').value   = config.to;
 $('#inWord').value = config.word;
 $('#inMsg').value  = config.msg;
 
@@ -122,6 +125,7 @@ $('#closePanel').onclick = () => $('#panel').classList.remove('open');
 $('#panel').onclick = (e) => { if (e.target.id === 'panel') $('#panel').classList.remove('open'); };
 
 function readPanel(){
+  config.to    = $('#inTo').value.trim();
   config.word  = $('#inWord').value.trim() || 'love you';
   config.msg   = $('#inMsg').value.trim()  || '💗';
   const active = document.querySelector('.swatch.active');
@@ -137,6 +141,7 @@ $('#applyBtn').onclick = () => {
 /* ---------- 6) Paylaş linki ---------- */
 function buildLink(){
   const u = new URL(location.href.split('?')[0]);
+  if (config.to) u.searchParams.set('to', config.to);
   u.searchParams.set('word',  config.word);
   u.searchParams.set('msg',   config.msg);
   u.searchParams.set('color', config.color.replace('#',''));
@@ -193,4 +198,33 @@ $('#muteBtn').onclick = () => {
   $('#muteBtn').textContent = audioOn ? '🔈' : '🔊';
   if (audioOn) startMusic();
   else clearTimeout(loopTimer);
+};
+
+/* ---------- 8) Düşen kalpçikler ---------- */
+let fallTimer = null;
+function spawnHeart(){
+  const f = $('#falling');
+  const h = document.createElement('div');
+  h.className = 'fall';
+  h.textContent = ['💗','💕','💖','🩷','❤️'][Math.floor(Math.random()*5)];
+  h.style.left = Math.random() * 100 + 'vw';
+  h.style.fontSize = (14 + Math.random() * 20) + 'px';
+  const dur = 6 + Math.random() * 6;
+  h.style.animationDuration = dur + 's';
+  f.appendChild(h);
+  setTimeout(() => h.remove(), dur * 1000);
+}
+function startFalling(){
+  if (fallTimer) return;
+  fallTimer = setInterval(spawnHeart, 450);
+}
+
+/* ---------- 9) Açılış ekranı ---------- */
+$('#startBtn').onclick = () => {
+  $('#intro').classList.add('hide');
+  startFalling();
+  // ilk dokunuş = sesi başlatma izni
+  audioOn = true;
+  $('#muteBtn').textContent = '🔈';
+  startMusic();
 };
