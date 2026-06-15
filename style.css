@@ -108,12 +108,12 @@ html,body{
   align-items:flex-end;
   gap:18px;
   z-index:2;
-  transform: scale(1.2);                 /* koşma bitene kadar sabit */
+  transform: scale(-1.2, 1.2);           /* yatay çevrildi: kadın solda */
   animation: sway 1s ease-in-out 1.7s infinite;   /* halay 1.7sn sonra başlar */
 }
 @keyframes sway{
-  0%,100%{ transform: translateX(-12px) rotate(-2deg) scale(1.2); }
-  50%    { transform: translateX(12px)  rotate(2deg)  scale(1.2); }
+  0%,100%{ transform: translateX(-12px) rotate(-2deg) scale(-1.2, 1.2); }
+  50%    { transform: translateX(12px)  rotate(2deg)  scale(-1.2, 1.2); }
 }
 
 /* açılışta iki yandan koşarak gelme */
@@ -229,7 +229,7 @@ html,body{
 
 /* ----- ERKEK: silindir şapka + papyon ----- */
 .hat{
-  position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+  position:absolute; top:14px; left:50%; transform:translateX(-50%);
   width:36px; height:23px; background:#1c1c22;
   border-radius:5px 5px 0 0; z-index:5;
 }
@@ -258,7 +258,7 @@ html,body{
 
 /* ----- KADIN: saç fiyongu + kirpik + ruj ----- */
 .bow{
-  position:absolute; top:-2px; left:50%; transform:translateX(-50%);
+  position:absolute; top:18px; left:50%; transform:translateX(-50%);
   width:9px; height:9px; background:#ff2d6b; border-radius:50%; z-index:5;
 }
 .bow::before, .bow::after{
@@ -315,7 +315,7 @@ html,body{
 .two > div{ flex:1; }
 
 @media (max-width:480px){
-  .dance-pair{ transform: scale(1.0); }
+  .dance-pair{ transform: scale(-1, 1); }
 }
 
 @keyframes rise{
