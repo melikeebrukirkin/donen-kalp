@@ -90,52 +90,137 @@ html,body{
   z-index:1;
 }
 
-/* nabız gibi atan sarmalayıcı (her 10 sn'de bir) */
-.heart-beat{
-  transform-style:preserve-3d;
-  animation: heartbeat 10s ease-in-out infinite;
-}
-@keyframes heartbeat{
-  0%, 82% { transform: scale(1); }
-  86%     { transform: scale(1.16); }   /* lub */
-  89%     { transform: scale(0.99); }
-  93%     { transform: scale(1.10); }   /* dub */
-  97%,100%{ transform: scale(1); }
-}
-
-.heart{
-  position:relative;
-  width:0; height:0;
-  transform-style:preserve-3d;
-  animation: spin 16s linear infinite;
-}
-@keyframes spin{
-  from{ transform: rotateX(8deg) rotateY(0deg); }
-  to  { transform: rotateX(8deg) rotateY(360deg); }
-}
-
-/* arkadaki ışık halesi (kalple birlikte atar) */
+/* arkadaki ışık halesi */
 .halo{
   position:absolute;
-  width:240px; height:240px;
+  width:300px; height:240px;
   border-radius:50%;
-  background: radial-gradient(circle, var(--glow) 0%, rgba(234,128,176,.35) 35%, transparent 70%);
-  filter: blur(26px);
-  opacity:.6;
+  background: radial-gradient(circle, var(--glow) 0%, rgba(234,128,176,.30) 38%, transparent 72%);
+  filter: blur(30px);
+  opacity:.55;
   z-index:0;
-  animation: heartbeat 10s ease-in-out infinite;
 }
 
-/* kalbi oluşturan ince çizgi noktaları */
-.dot{
+/* =================  HALAY ÇEKEN İKİ KALP  ================= */
+.dance-pair{
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+  gap:18px;
+  z-index:2;
+  animation: sway 1s ease-in-out infinite;
+}
+@keyframes sway{
+  0%,100%{ transform: translateX(-12px) rotate(-2deg) scale(1.25); }
+  50%    { transform: translateX(12px)  rotate(2deg)  scale(1.25); }
+}
+
+.dancer{
+  position:relative;
+  width:104px; height:172px;
+  animation: bob .5s ease-in-out infinite;
+}
+@keyframes bob{
+  0%,100%{ transform: translateY(0); }
+  50%    { transform: translateY(-13px); }
+}
+
+/* gövde = kalp */
+.body{
   position:absolute;
-  left:0; top:0;
-  width:3px; height:3px;
-  border-radius:50%;
+  left:2px; top:28px;
+  width:100px; height:90px;
+  background: linear-gradient(155deg, var(--glow), var(--love) 55%, #ff2d6b);
+  clip-path: path("M50 88 C 12 60,0 38,0 24 C 0 8,14 0,28 0 C 40 0,48 8,50 16 C 52 8,60 0,72 0 C 86 0,100 8,100 24 C 100 38,88 60,50 88 Z");
+  filter: drop-shadow(0 0 10px var(--glow));
+  z-index:2;
+}
+
+/* yüz */
+.face{ position:absolute; inset:0; z-index:3; }
+.eye{
+  position:absolute; top:30px;
+  width:12px; height:15px;
+  background:#fff; border-radius:50%;
+}
+.eye::after{
+  content:""; position:absolute; left:3px; top:5px;
+  width:6px; height:7px; background:#2a2a2a; border-radius:50%;
+}
+.face .eye:nth-child(1){ left:28px; }
+.face .eye:nth-child(2){ left:58px; }
+.cheek{
+  position:absolute; top:46px;
+  width:11px; height:7px; border-radius:50%;
+  background: rgba(255,120,170,.7);
+}
+.cheek-l{ left:22px; } .cheek-r{ left:68px; }
+.mouth{
+  position:absolute; top:48px; left:42px;
+  width:18px; height:10px;
+  border:3px solid #6a0026; border-top:none;
+  border-radius:0 0 18px 18px;
+}
+
+/* kollar */
+.arm{
+  position:absolute; top:62px;
+  width:9px; height:38px;
+  background:var(--love); border-radius:8px;
+  transform-origin:50% 5px;
+  z-index:1;
+}
+.arm::after{
+  content:""; position:absolute; bottom:-5px; left:-2.5px;
+  width:14px; height:14px; border-radius:50%;
   background:var(--love);
-  box-shadow:0 0 5px var(--glow), 0 0 9px var(--love);
-  transform-style:preserve-3d;
-  will-change: transform;
+}
+/* iç kollar ortada birleşir (el ele) */
+.d1 .arm-in { left:86px; transform: rotate(-108deg); }
+.d2 .arm-in { left:9px;  transform: rotate(108deg);  }
+/* sol kalbin dış kolu rahat */
+.d1 .arm-out{ left:9px;  transform: rotate(32deg); }
+/* sağ kalbin dış kolu havada mendil sallıyor */
+.d2 .arm-out{ left:86px; transform-origin:50% 5px; animation: wave .5s ease-in-out infinite; }
+@keyframes wave{
+  0%,100%{ transform: rotate(-138deg); }
+  50%    { transform: rotate(-168deg); }
+}
+
+/* bacaklar (halay adımı) */
+.leg{
+  position:absolute; top:114px;
+  width:9px; height:32px;
+  background:var(--love); border-radius:8px;
+  transform-origin:50% 4px;
+}
+.leg::after{
+  content:""; position:absolute; bottom:-4px; left:-4px;
+  width:17px; height:9px; border-radius:50%;
+  background:var(--love);
+}
+.leg-l{ left:36px; animation: stepA .5s ease-in-out infinite; }
+.leg-r{ left:58px; animation: stepB .5s ease-in-out infinite; }
+@keyframes stepA{ 0%,100%{ transform: rotate(12deg); }  50%{ transform: rotate(-12deg); } }
+@keyframes stepB{ 0%,100%{ transform: rotate(-12deg); } 50%{ transform: rotate(12deg);  } }
+
+/* mendil */
+.mendil{
+  position:absolute; top:28px; left:-12px;
+  width:28px; height:22px;
+  background: linear-gradient(#ffffff, #ffe1ef);
+  border-radius:4px;
+  box-shadow:0 0 10px #fff;
+  transform-origin: top right;
+  animation: flutter .32s ease-in-out infinite;
+}
+@keyframes flutter{
+  0%,100%{ transform: rotate(-14deg) skewX(8deg); }
+  50%    { transform: rotate(14deg)  skewX(-8deg); }
+}
+
+@media (max-width:480px){
+  .dance-pair{ transform: scale(.85); }
 }
 
 @keyframes rise{

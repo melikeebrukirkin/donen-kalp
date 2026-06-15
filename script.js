@@ -33,46 +33,7 @@ const config = {
   $('#sl3').style.boxShadow = field(22, ['#ffffff','#ffe9a8'], 0.8);
 })();
 
-/* ---------- 3) Kalbi kelimelerle oluştur ---------- */
-function heartPoint(t){
-  // klasik kalp parametrik denklemi
-  const x = 16 * Math.pow(Math.sin(t), 3);
-  const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-  return { x, y };
-}
-
-function buildHeart(){
-  const heart = $('#heart');
-  heart.innerHTML = '';
-
-  const SCALE_X = 11;     // yatay büyüklük
-  const SCALE_Y = 9;      // dikey büyüklük
-  const DOTS    = 170;    // çizgi yumuşaklığı (nokta sayısı)
-
-  // 3 iç içe kalp çizgisi (ölçek, derinlik)
-  const RINGS = [
-    { sc: 1.00, z:  10 },
-    { sc: 0.80, z:   0 },
-    { sc: 0.60, z: -10 },
-  ];
-
-  RINGS.forEach(ring => {
-    for (let i = 0; i < DOTS; i++){
-      const t  = (i / DOTS) * Math.PI * 2;
-      const p  = heartPoint(t);
-      const px = p.x * SCALE_X * ring.sc;
-      const py = -p.y * SCALE_Y * ring.sc;   // ekran y'si ters
-
-      const d = document.createElement('span');
-      d.className = 'dot';
-      d.style.transform =
-        `translate(-50%,-50%) translate3d(${px}px, ${py}px, ${ring.z}px)`;
-      heart.appendChild(d);
-    }
-  });
-}
-
-/* ---------- 4) Renk + mesajı uygula ---------- */
+/* ---------- 3) Renk + isim uygula ---------- */
 function applyConfig(){
   document.documentElement.style.setProperty('--love', config.color);
   document.documentElement.style.setProperty('--glow', lighten(config.color, 30));
@@ -80,7 +41,6 @@ function applyConfig(){
   tag.textContent = config.to ? config.to + ' için 💗' : '';
   tag.classList.toggle('show', !!config.to);
   document.title = config.to ? (config.to + ' 💗') : '💗';
-  buildHeart();
 }
 
 function lighten(hex, amt){
