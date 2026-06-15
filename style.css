@@ -14,21 +14,38 @@ html,body{
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ---------- YILDIZLAR ---------- */
-.stars{
-  position:fixed; inset:0;
-  background: radial-gradient(circle at 50% 40%, #1a0010 0%, #000 70%);
+/* ---------- GALAKSİ ---------- */
+.galaxy{
+  position:fixed; inset:-30%;
   z-index:0;
+  background:
+    radial-gradient(circle at 32% 32%, rgba(180,90,255,.28), transparent 42%),
+    radial-gradient(circle at 70% 62%, rgba(80,130,255,.22), transparent 46%),
+    radial-gradient(circle at 52% 80%, rgba(255,90,170,.20), transparent 42%),
+    radial-gradient(circle at 50% 45%, #1a0014 0%, #000 72%);
+  filter: blur(24px);
+  animation: swirl 80s linear infinite;
 }
-.star{
-  position:absolute;
-  width:2px; height:2px;
-  background:#fff;
-  border-radius:50%;
-  opacity:.6;
-  animation: twinkle var(--d,3s) ease-in-out infinite alternate;
+@keyframes swirl{ from{ transform:rotate(0deg) scale(1.05); } to{ transform:rotate(360deg) scale(1.05); } }
+
+/* ---------- KAYAN YILDIZLAR ---------- */
+.starfield{ position:fixed; inset:0; z-index:0; overflow:hidden; }
+.star-layer{
+  position:absolute; top:0; left:0;
+  width:1px; height:1px;
+  background:transparent;
 }
-@keyframes twinkle{ from{opacity:.1; transform:scale(.6);} to{opacity:.9; transform:scale(1.2);} }
+.star-layer::after{
+  content:""; position:absolute;
+  top:2000px; left:0;
+  width:1px; height:1px;
+  background:transparent;
+  box-shadow:inherit;
+}
+#sl1{ animation: drift 110s linear infinite; }
+#sl2{ animation: drift 70s  linear infinite; }
+#sl3{ animation: drift 45s  linear infinite; }
+@keyframes drift{ from{ transform:translateY(0); } to{ transform:translateY(-2000px); } }
 
 /* ---------- DÜŞEN KALPÇİKLER ---------- */
 .falling{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
