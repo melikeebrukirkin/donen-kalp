@@ -90,32 +90,59 @@ html,body{
   z-index:1;
 }
 
+/* nabız gibi atan sarmalayıcı (her 10 sn'de bir) */
+.heart-beat{
+  transform-style:preserve-3d;
+  animation: heartbeat 10s ease-in-out infinite;
+}
+@keyframes heartbeat{
+  0%, 82% { transform: scale(1); }
+  86%     { transform: scale(1.16); }   /* lub */
+  89%     { transform: scale(0.99); }
+  93%     { transform: scale(1.10); }   /* dub */
+  97%,100%{ transform: scale(1); }
+}
+
 .heart{
   position:relative;
   width:0; height:0;
   transform-style:preserve-3d;
-  animation: spin 14s linear infinite;
+  animation: spin 16s linear infinite;
 }
 @keyframes spin{
   from{ transform: rotateX(8deg) rotateY(0deg); }
   to  { transform: rotateX(8deg) rotateY(360deg); }
 }
 
-/* her bir kelime */
+/* arkadaki ışık halesi (kalple birlikte atar) */
+.halo{
+  position:absolute;
+  width:240px; height:240px;
+  border-radius:50%;
+  background: radial-gradient(circle, var(--glow) 0%, rgba(234,128,176,.35) 35%, transparent 70%);
+  filter: blur(26px);
+  opacity:.6;
+  z-index:0;
+  animation: heartbeat 10s ease-in-out infinite;
+}
+
+/* her bir kelime — daha ince ve keskin = net görüntü */
 .word{
   position:absolute;
   left:0; top:0;
   color:var(--love);
-  font-size:14px;
-  letter-spacing:2px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.5px;
   white-space:nowrap;
-  text-shadow:0 0 10px var(--glow), 0 0 20px var(--love);
+  text-shadow:0 0 4px var(--glow);
   transform-style:preserve-3d;
+  -webkit-font-smoothing:antialiased;
   will-change: transform, opacity;
   animation: breathe 4s ease-in-out infinite alternate;
 }
 @keyframes breathe{
-  from{ opacity:.55; }
+  from{ opacity:.6; }
   to  { opacity:1; }
 }
 
@@ -225,5 +252,6 @@ html,body{
 .close:hover{ opacity:1; }
 
 @media (max-width:480px){
-  .word{ font-size:12px; }
+  .word{ font-size:10px; }
+  .halo{ width:190px; height:190px; }
 }

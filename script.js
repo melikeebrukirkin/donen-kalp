@@ -46,11 +46,11 @@ function buildHeart(){
   const heart = $('#heart');
   heart.innerHTML = '';
 
-  const SCALE_X   = 14;   // yatay büyüklük (daha geniş = daha tombul)
-  const SCALE_Y   = 11;   // dikey büyüklük
-  const WORDS     = 64;   // her katmandaki kelime sayısı
-  const LAYERS    = 11;   // derinlik katmanı (kalbe hacim verir)
-  const LAYER_GAP = 14;   // katmanlar arası z mesafesi (px)
+  const SCALE_X   = 11.5; // yatay büyüklük (daha geniş = daha tombul)
+  const SCALE_Y   = 9;    // dikey büyüklük (biraz daha küçük kalp)
+  const WORDS     = 84;   // her katmandaki kelime sayısı (daha sık = daha net)
+  const LAYERS    = 9;    // derinlik katmanı (kalbe hacim verir)
+  const LAYER_GAP = 11;   // katmanlar arası z mesafesi (px)
 
   for (let l = 0; l < LAYERS; l++){
     const z = (l - (LAYERS - 1) / 2) * LAYER_GAP;
