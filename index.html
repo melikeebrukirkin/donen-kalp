@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=7" />
+<link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
 
@@ -28,7 +28,14 @@
   </div>
   <div class="falling" id="falling"></div>
 
-  <!-- İSİM (varsa) -->
+  <!-- KUYRUKLU YILDIZLAR -->
+  <div class="comets">
+    <span class="comet c1"></span>
+    <span class="comet c2"></span>
+    <span class="comet c3"></span>
+  </div>
+
+  <!-- İKİ İSİM + KALP -->
   <div class="nameTag" id="nameTag"></div>
 
   <!-- SAHNE: HALAY ÇEKEN İKİ KALP -->
@@ -36,32 +43,39 @@
     <div class="halo"></div>
     <div class="dance-pair">
 
-      <!-- Sol kalp -->
-      <div class="dancer d1">
-        <div class="arm arm-out"></div>
-        <div class="arm arm-in"></div>
-        <div class="leg leg-l"></div>
-        <div class="leg leg-r"></div>
-        <div class="body">
-          <div class="face">
-            <span class="eye"></span><span class="eye"></span>
-            <span class="cheek cheek-l"></span><span class="cheek cheek-r"></span>
-            <span class="mouth"></span>
+      <!-- Sol kalp: ERKEK (silindir şapka + papyon) -->
+      <div class="enter e1">
+        <div class="dancer d1">
+          <div class="arm arm-out"></div>
+          <div class="arm arm-in"></div>
+          <div class="leg leg-l"></div>
+          <div class="leg leg-r"></div>
+          <div class="body">
+            <div class="hat"></div>
+            <div class="face">
+              <span class="eye"></span><span class="eye"></span>
+              <span class="cheek cheek-l"></span><span class="cheek cheek-r"></span>
+              <span class="mouth"></span>
+            </div>
+            <div class="bowtie"></div>
           </div>
         </div>
       </div>
 
-      <!-- Sağ kalp (mendil sallıyor) -->
-      <div class="dancer d2">
-        <div class="arm arm-in"></div>
-        <div class="arm arm-out"><div class="mendil"></div></div>
-        <div class="leg leg-l"></div>
-        <div class="leg leg-r"></div>
-        <div class="body">
-          <div class="face">
-            <span class="eye"></span><span class="eye"></span>
-            <span class="cheek cheek-l"></span><span class="cheek cheek-r"></span>
-            <span class="mouth"></span>
+      <!-- Sağ kalp: KADIN (saç fiyongu + kirpik, mendil sallıyor) -->
+      <div class="enter e2">
+        <div class="dancer d2">
+          <div class="arm arm-in"></div>
+          <div class="arm arm-out"><div class="mendil"></div></div>
+          <div class="leg leg-l"></div>
+          <div class="leg leg-r"></div>
+          <div class="body">
+            <div class="bow"></div>
+            <div class="face">
+              <span class="eye"></span><span class="eye"></span>
+              <span class="cheek cheek-l"></span><span class="cheek cheek-r"></span>
+              <span class="mouth lips"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -78,8 +92,16 @@
   <div class="panel" id="panel">
     <div class="panel-inner">
       <h2>💗 Kendi kartını oluştur</h2>
-      <label>Kime? (isim — boş bırakılabilir)</label>
-      <input id="inTo" type="text" maxlength="20" placeholder="Ayşe" />
+      <div class="two">
+        <div>
+          <label>1. İsim</label>
+          <input id="inN1" type="text" maxlength="16" placeholder="Ahmet" />
+        </div>
+        <div>
+          <label>2. İsim</label>
+          <input id="inN2" type="text" maxlength="16" placeholder="Ayşe" />
+        </div>
+      </div>
 
       <label>Renk</label>
       <div class="colors" id="colors"></div>
@@ -93,6 +115,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=7"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

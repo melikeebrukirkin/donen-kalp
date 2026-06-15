@@ -9,9 +9,14 @@ const $ = (s) => document.querySelector(s);
 /* ---------- 1) Ayarları URL'den oku ---------- */
 const params = new URLSearchParams(location.search);
 const config = {
-  to:    params.get('to')    || '',
+  n1:    params.get('n1')    || '',
+  n2:    params.get('n2')    || '',
   color: '#' + (params.get('color') || 'ea80b0').replace('#', ''),
 };
+
+// metni güvenli hale getir (HTML injection önlemi)
+const esc = (s) => s.replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ---------- 2) Kayan yıldızlar (galaksi) ---------- */
 (function makeStars(){
@@ -38,9 +43,12 @@ function applyConfig(){
   document.documentElement.style.setProperty('--love', config.color);
   document.documentElement.style.setProperty('--glow', lighten(config.color, 30));
   const tag = $('#nameTag');
-  tag.textContent = config.to ? config.to + ' için 💗' : '';
-  tag.classList.toggle('show', !!config.to);
-  document.title = config.to ? (config.to + ' 💗') : '💗';
+  const has = config.n1 || config.n2;
+  tag.innerHTML = has
+    ? `${esc(config.n1)}<span class="nt-heart">💗</span>${esc(config.n2)}`
+    : '';
+  tag.classList.toggle('show', !!has);
+  document.title = has ? `${config.n1} 💗 ${config.n2}`.trim() : '💗';
 }
 
 function lighten(hex, amt){
@@ -73,14 +81,16 @@ const COLORS = ['ea80b0','ff4d6d','ff9eb5','b388ff','7afcff','ffd166'];
 })();
 
 // panel alanlarını mevcut değerlerle doldur
-$('#inTo').value   = config.to;
+$('#inN1').value = config.n1;
+$('#inN2').value = config.n2;
 
 $('#openPanel').onclick  = () => $('#panel').classList.add('open');
 $('#closePanel').onclick = () => $('#panel').classList.remove('open');
 $('#panel').onclick = (e) => { if (e.target.id === 'panel') $('#panel').classList.remove('open'); };
 
 function readPanel(){
-  config.to    = $('#inTo').value.trim();
+  config.n1 = $('#inN1').value.trim();
+  config.n2 = $('#inN2').value.trim();
   const active = document.querySelector('.swatch.active');
   config.color = '#' + (active ? active.dataset.color : 'ea80b0');
 }
@@ -94,7 +104,8 @@ $('#applyBtn').onclick = () => {
 /* ---------- 6) Paylaş linki ---------- */
 function buildLink(){
   const u = new URL(location.href.split('?')[0]);
-  if (config.to) u.searchParams.set('to', config.to);
+  if (config.n1) u.searchParams.set('n1', config.n1);
+  if (config.n2) u.searchParams.set('n2', config.n2);
   u.searchParams.set('color', config.color.replace('#',''));
   return u.toString();
 }
@@ -106,7 +117,8 @@ $('#shareBtn').onclick = async () => {
   const hint = $('#hint');
   try {
     if (navigator.share){
-      await navigator.share({ title: config.to ? (config.to + ' 💗') : '💗', url: link });
+      const t = (config.n1 || config.n2) ? `${config.n1} 💗 ${config.n2}`.trim() : '💗';
+      await navigator.share({ title: t, url: link });
       return;
     }
     await navigator.clipboard.writeText(link);

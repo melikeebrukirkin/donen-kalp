@@ -108,12 +108,20 @@ html,body{
   align-items:flex-end;
   gap:18px;
   z-index:2;
-  animation: sway 1s ease-in-out infinite;
+  transform: scale(1.2);                 /* koşma bitene kadar sabit */
+  animation: sway 1s ease-in-out 1.7s infinite;   /* halay 1.7sn sonra başlar */
 }
 @keyframes sway{
-  0%,100%{ transform: translateX(-12px) rotate(-2deg) scale(1.25); }
-  50%    { transform: translateX(12px)  rotate(2deg)  scale(1.25); }
+  0%,100%{ transform: translateX(-12px) rotate(-2deg) scale(1.2); }
+  50%    { transform: translateX(12px)  rotate(2deg)  scale(1.2); }
 }
+
+/* açılışta iki yandan koşarak gelme */
+.enter{ display:block; }
+.e1{ animation: runInL 1.7s cubic-bezier(.18,.7,.28,1) both; }
+.e2{ animation: runInR 1.7s cubic-bezier(.18,.7,.28,1) both; }
+@keyframes runInL{ from{ transform: translateX(-78vw); } to{ transform: translateX(0); } }
+@keyframes runInR{ from{ transform: translateX(78vw);  } to{ transform: translateX(0); } }
 
 .dancer{
   position:relative;
@@ -219,8 +227,95 @@ html,body{
   50%    { transform: rotate(14deg)  skewX(-8deg); }
 }
 
+/* ----- ERKEK: silindir şapka + papyon ----- */
+.hat{
+  position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+  width:36px; height:23px; background:#1c1c22;
+  border-radius:5px 5px 0 0; z-index:5;
+}
+.hat::after{ /* kırmızı bant */
+  content:""; position:absolute; bottom:0; left:0;
+  width:36px; height:6px; background:var(--love);
+}
+.hat::before{ /* kenar (brim) */
+  content:""; position:absolute; bottom:-3px; left:-11px;
+  width:58px; height:7px; background:#1c1c22; border-radius:5px;
+}
+.bowtie{
+  position:absolute; top:74px; left:50%; transform:translateX(-50%);
+  width:6px; height:10px; background:#1c1c22; border-radius:2px; z-index:4;
+}
+.bowtie::before{
+  content:""; position:absolute; top:-2px; left:-13px;
+  border-top:7px solid transparent; border-bottom:7px solid transparent;
+  border-right:13px solid #1c1c22;
+}
+.bowtie::after{
+  content:""; position:absolute; top:-2px; left:6px;
+  border-top:7px solid transparent; border-bottom:7px solid transparent;
+  border-left:13px solid #1c1c22;
+}
+
+/* ----- KADIN: saç fiyongu + kirpik + ruj ----- */
+.bow{
+  position:absolute; top:-2px; left:50%; transform:translateX(-50%);
+  width:9px; height:9px; background:#ff2d6b; border-radius:50%; z-index:5;
+}
+.bow::before, .bow::after{
+  content:""; position:absolute; top:-5px;
+  width:17px; height:16px; background:#ff2d6b;
+}
+.bow::before{ left:-16px; border-radius:60% 30% 60% 30%; transform: rotate(8deg); }
+.bow::after { left:8px;   border-radius:30% 60% 30% 60%; transform: rotate(-8deg); }
+/* kirpikler */
+.d2 .eye::before{
+  content:""; position:absolute; top:-4px; left:-2px;
+  width:16px; height:9px;
+  border-top:2.5px solid #2a2a2a; border-radius:50% 50% 0 0;
+}
+/* ruj */
+.mouth.lips{
+  border:none; background:#ff1f6b;
+  width:16px; height:9px; border-radius:0 0 16px 16px;
+  top:50px; left:42px;
+}
+
+/* ----- KUYRUKLU YILDIZLAR ----- */
+.comets{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.comet{
+  position:absolute;
+  width:150px; height:2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.95));
+  border-radius:2px;
+  filter: drop-shadow(0 0 6px #cfe3ff);
+  opacity:0;
+}
+.comet::after{
+  content:""; position:absolute; right:-3px; top:-3px;
+  width:8px; height:8px; border-radius:50%;
+  background:#fff; box-shadow:0 0 12px 3px #cfe3ff;
+}
+.c1{ top:-6%;  left:-14%; animation: shoot 9s  linear 1s infinite; }
+.c2{ top:5%;   left:-14%; animation: shoot 12s linear 5s infinite; }
+.c3{ top:-12%; left:28%;  animation: shoot 8s  linear 3s infinite; }
+@keyframes shoot{
+  0%  { transform: translate3d(0,0,0) rotate(28deg);          opacity:0; }
+  3%  { opacity:1; }
+  24% { opacity:1; }
+  32% { transform: translate3d(125vw,66vh,0) rotate(28deg);   opacity:0; }
+  100%{ transform: translate3d(125vw,66vh,0) rotate(28deg);   opacity:0; }
+}
+
+/* ----- İKİ İSİM ARASINDAKİ KALP ----- */
+.nt-heart{ display:inline-block; margin:0 10px; animation: ntbeat 1s ease-in-out infinite; }
+@keyframes ntbeat{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.28); } }
+
+/* panel: iki isim yan yana */
+.two{ display:flex; gap:12px; }
+.two > div{ flex:1; }
+
 @media (max-width:480px){
-  .dance-pair{ transform: scale(.85); }
+  .dance-pair{ transform: scale(1.0); }
 }
 
 @keyframes rise{
