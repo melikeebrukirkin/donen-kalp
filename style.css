@@ -241,24 +241,6 @@ html,body{
   content:""; position:absolute; bottom:-3px; left:-11px;
   width:58px; height:7px; background:#1c1c22; border-radius:5px;
 }
-.bowtie{
-  position:absolute; top:82px; left:50%; transform:translateX(-50%);
-  width:10px; height:16px; background:#15151a; border-radius:3px; z-index:6;
-  box-shadow:0 0 0 1.5px rgba(255,255,255,.25);
-}
-.bowtie::before{
-  content:""; position:absolute; top:-3px; left:-21px;
-  border-top:11px solid transparent; border-bottom:11px solid transparent;
-  border-right:21px solid #15151a;
-  filter: drop-shadow(0 0 1px rgba(255,255,255,.4));
-}
-.bowtie::after{
-  content:""; position:absolute; top:-3px; left:10px;
-  border-top:11px solid transparent; border-bottom:11px solid transparent;
-  border-left:21px solid #15151a;
-  filter: drop-shadow(0 0 1px rgba(255,255,255,.4));
-}
-
 /* ----- KADIN: saç fiyongu + kirpik + ruj ----- */
 .bow{
   position:absolute; top:18px; left:50%; transform:translateX(-50%);
