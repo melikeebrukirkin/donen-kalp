@@ -1,0 +1,193 @@
+:root{
+  --love: #ea80b0;     /* ana renk */
+  --glow: #ff9ecf;     /* parıltı */
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html,body{
+  height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family:'Poppins', sans-serif;
+  color:#fff;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- YILDIZLAR ---------- */
+.stars{
+  position:fixed; inset:0;
+  background: radial-gradient(circle at 50% 40%, #1a0010 0%, #000 70%);
+  z-index:0;
+}
+.star{
+  position:absolute;
+  width:2px; height:2px;
+  background:#fff;
+  border-radius:50%;
+  opacity:.6;
+  animation: twinkle var(--d,3s) ease-in-out infinite alternate;
+}
+@keyframes twinkle{ from{opacity:.1; transform:scale(.6);} to{opacity:.9; transform:scale(1.2);} }
+
+/* ---------- SAHNE / 3D ---------- */
+.scene{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  perspective: 900px;
+  z-index:1;
+}
+
+.heart{
+  position:relative;
+  width:0; height:0;
+  transform-style:preserve-3d;
+  animation: spin 14s linear infinite;
+}
+@keyframes spin{
+  from{ transform: rotateX(8deg) rotateY(0deg); }
+  to  { transform: rotateX(8deg) rotateY(360deg); }
+}
+
+/* her bir kelime */
+.word{
+  position:absolute;
+  left:0; top:0;
+  color:var(--love);
+  font-size:14px;
+  letter-spacing:2px;
+  white-space:nowrap;
+  text-shadow:0 0 10px var(--glow), 0 0 20px var(--love);
+  transform-style:preserve-3d;
+  will-change: transform, opacity;
+  animation: breathe 4s ease-in-out infinite alternate;
+}
+@keyframes breathe{
+  from{ opacity:.55; }
+  to  { opacity:1; }
+}
+
+/* ---------- ALT MESAJ ---------- */
+.caption{
+  position:fixed;
+  left:0; right:0;
+  bottom: 12vh;
+  text-align:center;
+  z-index:2;
+  font-family:'Dancing Script', cursive;
+  font-size: clamp(28px, 7vw, 56px);
+  color:#fff;
+  text-shadow:0 0 14px var(--glow), 0 0 30px var(--love);
+  padding:0 16px;
+  opacity:0;
+  animation: rise 1.4s ease forwards .4s;
+  pointer-events:none;
+}
+@keyframes rise{
+  from{ opacity:0; transform:translateY(20px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+
+/* ---------- BUTONLAR ---------- */
+.muteBtn, .openPanel{
+  position:fixed;
+  z-index:5;
+  border:none;
+  cursor:pointer;
+  backdrop-filter: blur(6px);
+  background: rgba(255,255,255,.08);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.15);
+  transition:.2s;
+}
+.muteBtn{
+  bottom:18px; right:18px;
+  width:46px; height:46px;
+  border-radius:50%;
+  font-size:18px;
+}
+.openPanel{
+  bottom:18px; left:18px;
+  padding:10px 16px;
+  border-radius:30px;
+  font-size:14px;
+}
+.muteBtn:hover, .openPanel:hover{ background:rgba(255,255,255,.18); }
+
+/* ---------- PANEL ---------- */
+.panel{
+  position:fixed; inset:0;
+  z-index:10;
+  display:none;
+  align-items:center; justify-content:center;
+  background:rgba(0,0,0,.6);
+  backdrop-filter: blur(4px);
+  padding:18px;
+}
+.panel.open{ display:flex; }
+.panel-inner{
+  position:relative;
+  width:100%; max-width:380px;
+  background:#15090f;
+  border:1px solid rgba(234,128,176,.4);
+  border-radius:20px;
+  padding:26px 22px;
+  box-shadow:0 0 40px rgba(234,128,176,.25);
+  animation: rise .3s ease;
+}
+.panel-inner h2{ font-size:20px; margin-bottom:18px; font-weight:600; }
+.panel-inner label{
+  display:block; font-size:12px; opacity:.7;
+  margin:14px 0 6px;
+}
+.panel-inner input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
+  color:#fff;
+  font-size:15px;
+  font-family:inherit;
+}
+.panel-inner input:focus{ outline:none; border-color:var(--love); }
+
+.colors{ display:flex; gap:10px; margin-top:4px; }
+.swatch{
+  width:30px; height:30px; border-radius:50%;
+  cursor:pointer; border:2px solid transparent;
+  transition:.15s;
+}
+.swatch.active{ border-color:#fff; transform:scale(1.12); }
+
+.row{ display:flex; gap:10px; margin-top:22px; }
+.btn{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  font-size:14px;
+  font-family:inherit;
+  cursor:pointer;
+  transition:.2s;
+}
+.btn:hover{ background:rgba(255,255,255,.14); }
+.btn.primary{
+  background:var(--love);
+  border-color:var(--love);
+  color:#1a0010;
+  font-weight:600;
+}
+.hint{ font-size:11px; opacity:.6; margin-top:14px; line-height:1.5; }
+.close{
+  position:absolute; top:12px; right:14px;
+  background:none; border:none; color:#fff;
+  font-size:18px; cursor:pointer; opacity:.7;
+}
+.close:hover{ opacity:1; }
+
+@media (max-width:480px){
+  .word{ font-size:12px; }
+}

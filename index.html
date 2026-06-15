@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>💗 Sana Bir Sürpriz</title>
+<meta name="description" content="Senin için dönen bir kalp 💗" />
+<!-- Open Graph: paylaşıldığında önizleme -->
+<meta property="og:title" content="💗 Sana özel bir sürpriz var" />
+<meta property="og:description" content="Aç ve gör 💗" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ARKA PLAN -->
+  <div class="stars" id="stars"></div>
+
+  <!-- SAHNE -->
+  <div class="scene">
+    <div class="heart" id="heart"></div>
+  </div>
+
+  <!-- ÖZEL MESAJ -->
+  <div class="caption" id="caption"></div>
+
+  <!-- MÜZİK / SES (opsiyonel) -->
+  <button class="muteBtn" id="muteBtn" title="Ses aç/kapat">🔊</button>
+
+  <!-- KONTROL PANELİ (kendi kartını oluştur) -->
+  <button class="openPanel" id="openPanel">✏️ Kendin oluştur</button>
+
+  <div class="panel" id="panel">
+    <div class="panel-inner">
+      <h2>💗 Kendi kartını oluştur</h2>
+      <label>Kalbi oluşturan kelime</label>
+      <input id="inWord" type="text" maxlength="20" placeholder="love you" />
+
+      <label>Altta yazacak mesaj</label>
+      <input id="inMsg" type="text" maxlength="60" placeholder="Seni seviyorum 💗" />
+
+      <label>Renk</label>
+      <div class="colors" id="colors"></div>
+
+      <div class="row">
+        <button class="btn primary" id="applyBtn">Uygula</button>
+        <button class="btn" id="shareBtn">🔗 Linki kopyala</button>
+      </div>
+      <p class="hint" id="hint">Linki kopyalayıp arkadaşına gönder, açtığında bu mesajı görecek 💌</p>
+      <button class="close" id="closePanel">✕</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
